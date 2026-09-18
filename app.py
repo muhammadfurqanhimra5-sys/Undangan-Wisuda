@@ -8,8 +8,24 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Parameter URL nama tamu (?to=Nama+Tamu)
-nama_tamu = st.query_params.get("to", "Tamu Kehormatan")
+# Sistem Penanganan Parameter URL yang Kebal Bug
+# Mengatasi perubahan tipe data query_params di berbagai versi Streamlit
+try:
+    raw_to = st.query_params.get("to", None)
+except Exception:
+    raw_to = None
+
+if isinstance(raw_to, list):
+    nama_tamu = raw_to[0] if len(raw_to) > 0 else "Tamu Kehormatan"
+elif raw_to is not None and str(raw_to).strip() != "":
+    nama_tamu = str(raw_to)
+else:
+    nama_tamu = "Tamu Kehormatan"
+
+# Mengembalikan karakter '+' menjadi spasi asli
+nama_tamu = nama_tamu.replace("+", " ").strip()
+if not nama_tamu:
+    nama_tamu = "Tamu Kehormatan"
 
 # CSS Editorial Haute Luxury (Obsidian & Platinum Bronze)
 st.markdown(
@@ -161,31 +177,37 @@ st.markdown(
 
 # 1. Header Pembuka
 st.markdown(
-    '<div class="text-center" style="margin-top: 20px;">'
-    '<div class="editorial-tag">Official Commencement Notice</div>'
-    '<h1 class="main-heading">Graduation</h1>'
-    '<div class="sub-heading-italic">Menandai akhir dedikasi akademik dan perayaan sebuah permulaan baru.</div>'
-    '</div>',
+    """
+    <div class="text-center" style="margin-top: 20px;">
+        <div class="editorial-tag">Official Commencement Notice</div>
+        <h1 class="main-heading">Graduation</h1>
+        <div class="sub-heading-italic">Menandai akhir dedikasi akademik dan perayaan sebuah permulaan baru.</div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
 # 2. Kartu Tamu Kehormatan
 st.markdown(
-    f'<div class="luxury-card text-center">'
-    f'<div class="editorial-tag">Special Invitation For</div>'
-    f'<div class="recipient-name">{nama_tamu}</div>'
-    f'</div>',
+    f"""
+    <div class="luxury-card text-center">
+        <div class="editorial-tag">Special Invitation For</div>
+        <div class="recipient-name">{nama_tamu}</div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
 # 3. Kartu Wisudawan
 st.markdown(
-    '<div class="luxury-card text-center">'
-    '<div class="editorial-tag">The Graduate</div>'
-    '<div class="graduate-name">Muhammad Furqan Himra, S.T.</div>'
-    '<div><span class="tag-degree">Sarjana Teknik Industri</span></div>'
-    '<p class="univ-subtitle">Departemen Teknik Industri · Universitas Andalas</p>'
-    '</div>',
+    """
+    <div class="luxury-card text-center">
+        <div class="editorial-tag">The Graduate</div>
+        <div class="graduate-name">Muhammad Furqan Himra, S.T.</div>
+        <div><span class="tag-degree">Sarjana Teknik Industri</span></div>
+        <p class="univ-subtitle">Departemen Teknik Industri · Universitas Andalas</p>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -193,16 +215,18 @@ st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
 # 4. Detail Acara
 st.markdown(
-    '<div class="luxury-card text-left">'
-    '<div class="editorial-tag" style="text-align: center; margin-bottom: 24px; color: #d4af37;">Rincian Agenda Acara</div>'
-    '<div class="meta-title">Hari & Tanggal</div>'
-    '<div class="meta-content">Sabtu, 19 September 2026</div>'
-    '<div class="meta-title">Waktu Pelaksanaan</div>'
-    '<div class="meta-content">14.00 WIB — Selesai</div>'
-    '<div class="meta-title">Tempat & Ruangan</div>'
-    '<div style="font-family: \'Cormorant Garamond\', serif; font-size: 1.45rem; color: #ffffff;">Gedung Jurusan Teknik Industri</div>'
-    '<div style="font-size: 0.82rem; color: #9ca3af; letter-spacing: 0.5px; margin-top: 4px;">Fakultas Teknik, Universitas Andalas, Limau Manis, Padang</div>'
-    '</div>',
+    """
+    <div class="luxury-card text-left">
+        <div class="editorial-tag" style="text-align: center; margin-bottom: 24px; color: #d4af37;">Rincian Agenda Acara</div>
+        <div class="meta-title">Hari & Tanggal</div>
+        <div class="meta-content">Sabtu, 19 September 2026</div>
+        <div class="meta-title">Waktu Pelaksanaan</div>
+        <div class="meta-content">12.30 – 14.30 WIB</div>
+        <div class="meta-title">Tempat & Ruangan</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; color: #ffffff;">Gedung Jurusan Teknik Industri</div>
+        <div style="font-size: 0.82rem; color: #9ca3af; letter-spacing: 0.5px; margin-top: 4px;">Fakultas Teknik, Universitas Andalas, Limau Manis, Padang</div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -211,28 +235,32 @@ st.markdown("<div class='editorial-tag'>Titik Koordinat & Navigasi</div>", unsaf
 maps_url = "https://maps.google.com/?q=Jurusan+Teknik+Industri+Universitas+Andalas"
 
 st.markdown(
-    f'<div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin-bottom: 12px;">'
-    f'<iframe src="https://maps.google.com/maps?q=Jurusan+Teknik+Industri+Universitas+Andalas&t=&z=16&ie=UTF8&iwloc=&output=embed" '
-    f'width="100%" height="270" style="border:0; filter: invert(90%) hue-rotate(180deg);" allowfullscreen="" loading="lazy"></iframe>'
-    f'</div>'
-    f'<div style="text-align: center; margin-bottom: 24px;">'
-    f'<a href="{maps_url}" target="_blank" style="color: #d4af37; text-decoration: none; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;">'
-    f'Buka Petunjuk Arah Google Maps ↗'
-    f'</a>'
-    f'</div>',
+    f"""
+    <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin-bottom: 12px;">
+        <iframe src="https://maps.google.com/maps?q=Jurusan+Teknik+Industri+Universitas+Andalas&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+        width="100%" height="270" style="border:0; filter: invert(90%) hue-rotate(180deg);" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+    <div style="text-align: center; margin-bottom: 24px;">
+        <a href="{maps_url}" target="_blank" style="color: #d4af37; text-decoration: none; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;">
+            Buka Petunjuk Arah Google Maps ↗
+        </a>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
 # 6. Kutipan Filosofis
 st.markdown(
-    '<div class="luxury-card text-center" style="padding: 36px 24px;">'
-    '<p style="font-family: \'Cormorant Garamond\', serif; font-style: italic; font-size: 1.25rem; color: #f3f4f6; line-height: 1.7; margin: 0;">'
-    '“Setiap ikhtiar dan proses panjang selalu berlabuh pada pencapaian yang bermakna. Terima kasih telah menjadi bagian tak terpisahkan dalam perjalanan ini.”'
-    '</p>'
-    '<p style="font-size: 0.68rem; letter-spacing: 3px; color: #9ca3af; text-transform: uppercase; margin-top: 18px;">'
-    '— Muhammad Furqan Himra, S.T.'
-    '</p>'
-    '</div>',
+    """
+    <div class="luxury-card text-center" style="padding: 36px 24px;">
+        <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.25rem; color: #f3f4f6; line-height: 1.7; margin: 0;">
+            “Setiap ikhtiar dan proses panjang selalu berlabuh pada pencapaian yang bermakna. Terima kasih telah menjadi bagian tak terpisahkan dalam perjalanan ini.”
+        </p>
+        <p style="font-size: 0.68rem; letter-spacing: 3px; color: #9ca3af; text-transform: uppercase; margin-top: 18px;">
+            — Muhammad Furqan Himra, S.T.
+        </p>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -240,18 +268,20 @@ st.markdown("<hr class='divider'>", unsafe_allow_html=True)
 
 # 7. Penutup Editorial
 st.markdown(
-    '<div class="text-center" style="margin-top: 40px; margin-bottom: 50px;">'
-    '<div style="font-family: \'Cormorant Garamond\', serif; font-size: 1.25rem; font-style: italic; color: #ffffff; margin-bottom: 8px;">'
-    'Kehadiran Rekan-Rekan Melengkapi Rasa Syukur Kami'
-    '</div>'
-    '<div style="font-size: 0.7rem; letter-spacing: 3px; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">'
-    'Departemen Teknik Industri · Universitas Andalas'
-    '</div>'
-    '<div>'
-    '<a href="https://instagram.com/frqnhmra__" target="_blank" style="color: #9ca3af; text-decoration: none; font-size: 0.75rem; letter-spacing: 1.5px;">'
-    'INSTAGRAM : @frqnhmra__'
-    '</a>'
-    '</div>'
-    '</div>',
+    """
+    <div class="text-center" style="margin-top: 40px; margin-bottom: 50px;">
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-style: italic; color: #ffffff; margin-bottom: 8px;">
+            Kehadiran Rekan-Rekan Melengkapi Rasa Syukur Kami
+        </div>
+        <div style="font-size: 0.7rem; letter-spacing: 3px; color: #6b7280; text-transform: uppercase; margin-bottom: 20px;">
+            Departemen Teknik Industri · Universitas Andalas
+        </div>
+        <div>
+            <a href="https://instagram.com/frqnhmra__" target="_blank" style="color: #9ca3af; text-decoration: none; font-size: 0.75rem; letter-spacing: 1.5px;">
+                INSTAGRAM : @frqnhmra__
+            </a>
+        </div>
+    </div>
+    """,
     unsafe_allow_html=True,
 )
