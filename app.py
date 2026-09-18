@@ -221,7 +221,7 @@ st.markdown(
         <div class="meta-title">Hari & Tanggal</div>
         <div class="meta-content">Sabtu, 19 September 2026</div>
         <div class="meta-title">Waktu Pelaksanaan</div>
-        <div class="meta-content">12.30 – 14.30 WIB</div>
+        <div class="meta-content">12.30 – 15.00 WIB</div>
         <div class="meta-title">Tempat & Ruangan</div>
         <div style="font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; color: #ffffff;">Gedung Jurusan Teknik Industri</div>
         <div style="font-size: 0.82rem; color: #9ca3af; letter-spacing: 0.5px; margin-top: 4px;">Fakultas Teknik, Universitas Andalas, Limau Manis, Padang</div>
